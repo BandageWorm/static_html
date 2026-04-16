@@ -1,62 +1,94 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-    <meta charset="utf-8">
-    <title>离线序列图工具</title>
-    <style>
-        body { font-family: sans-serif; padding: 20px; background: #f4f4f9; }
-        .container { display: flex; gap: 20px; height: 90vh; }
-        #editor { flex: 1; width: 100%; padding: 15px; font-family: monospace; font-size: 14px; border: 1px solid #ccc; border-radius: 4px; }
-        #diagram { flex: 1; background: white; padding: 20px; border: 1px solid #ccc; border-radius: 4px; overflow: auto; }
-        .controls { margin-bottom: 10px; }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>序列图工具</title>
+<script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-gray-100 min-h-screen flex flex-col p-3 md:p-5">
 
-    <div class="controls">
-        <select id="theme">
-            <option value="simple">极简风格 (Simple)</option>
-            <option value="hand">手写风格 (Hand-drawn)</option>
-        </select>
-        <span>在左侧输入，右侧实时更新</span>
-    </div>
+  <!-- 顶部控制栏 -->
+  <div class="flex flex-wrap items-center gap-3 mb-3 shrink-0">
+    <a href="/" class="text-gray-400 hover:text-blue-500 text-base">← 返回</a>
+    <h1 class="text-xl md:text-xl font-semibold text-gray-800">序列图工具</h1>
+    <select id="theme"
+      class="ml-auto px-3 py-2 text-sm md:text-sm border border-gray-300 rounded-lg bg-white
+             focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none">
+      <option value="simple">极简风格 (Simple)</option>
+      <option value="hand">手写风格 (Hand-drawn)</option>
+    </select>
+    <button onclick="savePNG()"
+      class="px-4 py-2 text-sm md:text-sm bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg transition-colors">
+      保存图片</button>
+    <span class="text-sm text-gray-400 hidden sm:inline">左侧输入，右侧实时更新</span>
+  </div>
 
-    <div class="container">
-        <textarea id="editor">
+  <!-- 主面板：移动端上下，桌面端左右 -->
+  <div class="flex-1 flex flex-col lg:flex-row gap-3 min-h-0">
+
+    <!-- 编辑器 -->
+    <div class="flex-1 min-h-[35vh] lg:min-h-0 relative">
+      <textarea id="editor"
+        class="absolute inset-0 w-full h-full p-4 font-mono text-sm md:text-sm leading-relaxed
+               border border-gray-300 rounded-lg resize-none outline-none bg-white
+               focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
 Alice->Bob: Hello Bob, how are you?
 Note right of Bob: Bob thinks
 Bob-->Alice: I am good thanks!
 Alice->>Bob: That's great!</textarea>
-        <div id="diagram"></div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.3.0/raphael.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.13.6/underscore-min.js"></script>
-    <script src="https://bramp.github.io/js-sequence-diagrams/js/sequence-diagram-min.js"></script>
+    <!-- 图表输出 -->
+    <div class="flex-1 min-h-[35vh] lg:min-h-0 bg-white border border-gray-300 rounded-lg p-4 md:p-5 overflow-auto">
+      <div id="diagram"></div>
+    </div>
+  </div>
 
-    <script>
-        const editor = document.getElementById('editor');
-        const diagramDiv = document.getElementById('diagram');
-        const themeSelect = document.getElementById('theme');
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.3.0/raphael.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.13.6/underscore-min.js"></script>
+  <script src="https://bramp.github.io/js-sequence-diagrams/js/sequence-diagram-min.js"></script>
+  <script>
+    const editor = document.getElementById('editor');
+    const diagramDiv = document.getElementById('diagram');
+    const themeSelect = document.getElementById('theme');
 
-        function render() {
-            diagramDiv.innerHTML = ''; // 清空内容
-            try {
-                const diagram = Diagram.parse(editor.value);
-                diagram.drawSVG('diagram', {
-                    theme: themeSelect.value
-                });
-            } catch (e) {
-                diagramDiv.innerHTML = '<pre style="color:red">' + e.message + '</pre>';
-            }
-        }
+    function render() {
+      diagramDiv.innerHTML = '';
+      try {
+        const diagram = Diagram.parse(editor.value);
+        diagram.drawSVG('diagram', { theme: themeSelect.value });
+      } catch (e) {
+        diagramDiv.innerHTML = '<pre class="text-red-500 text-sm">' + e.message + '</pre>';
+      }
+    }
 
-        // 监听输入和主题切换
-        editor.addEventListener('input', render);
-        themeSelect.addEventListener('change', render);
+    editor.addEventListener('input', render);
+    themeSelect.addEventListener('change', render);
+    render();
 
-        // 初始化渲染
-        render();
-    </script>
+    function savePNG() {
+      const svg = diagramDiv.querySelector('svg');
+      if (!svg) return;
+      const svgData = new XMLSerializer().serializeToString(svg);
+      const canvas = document.createElement('canvas');
+      const bbox = svg.getBoundingClientRect();
+      const scale = 2;
+      canvas.width = bbox.width * scale;
+      canvas.height = bbox.height * scale;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      const img = new Image();
+      img.onload = function() {
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        const a = document.createElement('a');
+        a.download = 'sequence-diagram.png';
+        a.href = canvas.toDataURL('image/png');
+        a.click();
+      };
+      img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgData);
+    }
+  </script>
 </body>
 </html>
