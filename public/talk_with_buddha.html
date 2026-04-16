@@ -1,84 +1,100 @@
 <!DOCTYPE html>
-<html lang="zh-cn">
+<html lang="zh-CN">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>与佛论禅</title>
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
-  .container { background: rgba(255,255,255,0.95); border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); max-width: 640px; width: 100%; padding: 40px 32px; }
-  h1 { text-align: center; color: #4a4a4a; font-size: 28px; margin-bottom: 6px; }
-  .subtitle { text-align: center; color: #999; font-size: 13px; margin-bottom: 24px; }
-  textarea { width: 100%; border: 1px solid #ddd; border-radius: 8px; padding: 12px; font-size: 15px; resize: vertical; font-family: inherit; transition: border-color 0.2s; }
-  textarea:focus { outline: none; border-color: #667eea; }
-  .key-row { display: flex; gap: 10px; margin: 14px 0; align-items: center; }
-  .key-row input { flex: 1; border: 1px solid #ddd; border-radius: 8px; padding: 10px 12px; font-size: 14px; font-family: inherit; }
-  .key-row input:focus { outline: none; border-color: #667eea; }
-  .btn-row { display: flex; gap: 10px; margin: 14px 0; }
-  .btn { flex: 1; padding: 11px 0; border: none; border-radius: 8px; font-size: 15px; cursor: pointer; font-family: inherit; transition: opacity 0.2s; }
-  .btn:hover { opacity: 0.85; }
-  .btn-encrypt { background: #667eea; color: #fff; }
-  .btn-decrypt { background: #f5a623; color: #fff; }
-  .btn-copy { background: #48c774; color: #fff; font-size: 13px; padding: 8px 18px; border: none; border-radius: 6px; cursor: pointer; font-family: inherit; }
-  .btn-copy:hover { opacity: 0.85; }
-  .btn-help { background: none; border: 1px solid #bbb; border-radius: 6px; padding: 8px 14px; font-size: 13px; cursor: pointer; color: #666; font-family: inherit; }
-  .btn-help:hover { background: #f0f0f0; }
-  .bottom-row { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; }
-  .alert { padding: 10px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 12px; display: none; }
-  .alert-error { background: #ffe0e0; color: #c0392b; }
-  .alert-success { background: #d4edda; color: #155724; }
-  .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 100; align-items: center; justify-content: center; }
-  .modal-overlay.show { display: flex; }
-  .modal { background: #fff; border-radius: 12px; max-width: 480px; width: 90%; padding: 28px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
-  .modal h3 { margin-bottom: 14px; color: #4a4a4a; }
-  .modal p { font-size: 14px; color: #555; line-height: 1.7; margin-bottom: 8px; }
-  .modal-close { margin-top: 16px; text-align: right; }
-  .modal-close .btn { padding: 8px 20px; font-size: 14px; background: #667eea; color: #fff; }
-  footer { text-align: center; margin-top: 18px; font-size: 11px; color: #aaa; }
-  footer a { color: #888; }
-</style>
+<script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="min-h-screen flex items-center justify-center p-4 md:p-6
+             bg-gradient-to-br from-indigo-500 to-purple-700">
 
-<div class="container">
-  <h1>与佛论禅</h1>
-  <p class="subtitle">文本加密 / 解密工具 · 本项目与宗教无关</p>
-  <div class="alert alert-error" id="alertError"></div>
-  <div class="alert alert-success" id="alertSuccess"></div>
-  <textarea id="inputText" rows="4" placeholder="你的困惑（输入明文或密文）"></textarea>
-  <div class="key-row">
-    <input type="password" id="inputKey" placeholder="箴言（密码，可选）">
+<div class="bg-white/95 rounded-2xl shadow-2xl w-full max-w-xl p-6 md:p-10">
+
+  <h1 class="text-center text-gray-700 text-xl md:text-2xl font-bold mb-1">
+    <a href="/" class="text-gray-300 hover:text-indigo-500 mr-1 text-sm">←</a>
+    与佛论禅
+  </h1>
+  <p class="text-center text-gray-400 text-xs md:text-sm mb-5">文本加密 / 解密工具 · 本项目与宗教无关</p>
+
+  <!-- 提示 -->
+  <div id="alertError"
+    class="hidden px-4 py-2.5 rounded-lg text-sm mb-3 bg-red-100 text-red-700"></div>
+  <div id="alertSuccess"
+    class="hidden px-4 py-2.5 rounded-lg text-sm mb-3 bg-green-100 text-green-800"></div>
+
+  <!-- 输入 -->
+  <textarea id="inputText" rows="3"
+    placeholder="你的困惑（输入明文或密文）"
+    class="w-full border border-gray-300 rounded-lg p-3 text-sm md:text-base resize-y
+           focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
+           transition-colors"></textarea>
+
+  <!-- 密码 -->
+  <div class="mt-3">
+    <input type="password" id="inputKey" placeholder="箴言（密码，可选）"
+      class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm md:text-base
+             focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
+             transition-colors">
   </div>
-  <div class="btn-row">
-    <button class="btn btn-encrypt" id="btnEncrypt">听佛讲经（加密）</button>
-    <button class="btn btn-decrypt" id="btnDecrypt">听佛解惑（解密）</button>
+
+  <!-- 按钮 -->
+  <div class="flex gap-3 mt-3">
+    <button id="btnEncrypt"
+      class="flex-1 py-2.5 rounded-lg text-sm md:text-base text-white
+             bg-indigo-500 hover:bg-indigo-600 transition-colors">
+      听佛讲经（加密）</button>
+    <button id="btnDecrypt"
+      class="flex-1 py-2.5 rounded-lg text-sm md:text-base text-white
+             bg-amber-500 hover:bg-amber-600 transition-colors">
+      听佛解惑（解密）</button>
   </div>
-  <textarea id="outputText" rows="6" placeholder="佛的答案" readonly></textarea>
-  <div class="bottom-row">
-    <button class="btn-help" id="btnHelp">普渡众生</button>
-    <button class="btn-copy" id="btnCopy">复制结果</button>
+
+  <!-- 输出 -->
+  <textarea id="outputText" rows="5" placeholder="佛的答案" readonly
+    class="w-full mt-3 border border-gray-300 rounded-lg p-3 text-sm md:text-base resize-y
+           bg-gray-50 focus:outline-none"></textarea>
+
+  <!-- 底部 -->
+  <div class="flex justify-between items-center mt-3">
+    <button id="btnHelp"
+      class="px-4 py-2 text-xs md:text-sm border border-gray-300 rounded-lg text-gray-500
+             hover:bg-gray-100 transition-colors">
+      普渡众生</button>
+    <button id="btnCopy"
+      class="px-5 py-2 text-xs md:text-sm rounded-lg text-white
+             bg-emerald-500 hover:bg-emerald-600 transition-colors">
+      复制结果</button>
   </div>
-  <footer>Based on <a href="https://github.com/takuron/talk-with-buddha" target="_blank">talk-with-buddha</a> by Takuron (MIT)</footer>
+
+  <footer class="text-center mt-4 text-[11px] text-gray-400">
+    Based on <a href="https://github.com/takuron/talk-with-buddha" target="_blank"
+      class="text-gray-500 hover:text-indigo-500">talk-with-buddha</a> by Takuron (MIT)
+  </footer>
 </div>
 
-<div class="modal-overlay" id="helpModal">
-  <div class="modal">
-    <h3>普渡众生（帮助）</h3>
-    <p><b>Q：这是什么？</b><br>A：一个文本加密/解密小工具。将普通文本加密为佛经风格的密文，也可将密文还原。</p>
-    <p><b>Q：如何使用？</b><br>A：加密 - 输入原文，可选填箴言（密码），点击"听佛讲经"；解密 - 粘贴密文（以"佛又曰："开头），填入相同箴言，点击"听佛解惑"。</p>
-    <p><b>Q：为何无法解密？</b><br>A：请确认密文完整且箴言与加密时一致。部分平台可能自动转换繁体字导致密文损坏。</p>
-    <div class="modal-close"><button class="btn" id="btnCloseHelp">然也</button></div>
+<!-- 帮助弹窗 -->
+<div class="hidden fixed inset-0 bg-black/40 z-50 items-center justify-center" id="helpModal">
+  <div class="bg-white rounded-xl w-[90%] max-w-md p-6 md:p-7 shadow-xl">
+    <h3 class="text-gray-700 font-bold text-base md:text-lg mb-3">普渡众生（帮助）</h3>
+    <div class="text-sm text-gray-600 leading-relaxed space-y-2">
+      <p><span class="font-semibold">Q：这是什么？</span><br>A：一个文本加密/解密小工具。将普通文本加密为佛经风格的密文，也可将密文还原。</p>
+      <p><span class="font-semibold">Q：如何使用？</span><br>A：加密 - 输入原文，可选填箴言（密码），点击"听佛讲经"；解密 - 粘贴密文（以"佛又曰："开头），填入相同箴言，点击"听佛解惑"。</p>
+      <p><span class="font-semibold">Q：为何无法解密？</span><br>A：请确认密文完整且箴言与加密时一致。部分平台可能自动转换繁体字导致密文损坏。</p>
+    </div>
+    <div class="text-right mt-4">
+      <button id="btnCloseHelp"
+        class="px-5 py-2 text-sm rounded-lg text-white bg-indigo-500 hover:bg-indigo-600 transition-colors">
+        然也</button>
+    </div>
   </div>
 </div>
 
 <script>
 // ============================================================
 // CryptoJS-compatible AES encrypt/decrypt (pure JS, no CDN)
-// Implements OpenSSL "Salted__" format with MD5 key derivation
 // ============================================================
 (function(){
-  // --- MD5 implementation ---
   function md5(bytes) {
     function f1(b,c,d){return(b&c)|(~b&d)}
     function f2(b,c,d){return(b&d)|(c&~d)}
@@ -115,7 +131,6 @@
     return out;
   }
 
-  // OpenSSL EVP_BytesToKey (MD5, 1 iteration)
   function evpKDF(password, salt) {
     var pass = new TextEncoder().encode(password);
     var concat = function(a,b){var c=new Uint8Array(a.length+b.length);c.set(a);c.set(b,a.length);return c};
@@ -125,7 +140,6 @@
     return { key: concat(d1, d2), iv: d3 };
   }
 
-  // --- AES-256-CBC (pure JS) ---
   var SBOX=[99,124,119,123,242,107,111,197,48,1,103,43,254,215,171,118,202,130,201,125,250,89,71,240,173,212,162,175,156,164,114,192,183,253,147,38,54,63,247,204,52,165,229,241,113,216,49,21,4,199,35,195,24,150,5,154,7,18,128,226,235,39,178,117,9,131,44,26,27,110,90,160,82,59,214,179,41,227,47,132,83,209,0,237,32,252,177,91,106,203,190,57,74,76,88,207,208,239,170,251,67,77,51,133,69,249,2,127,80,60,159,168,81,163,64,143,146,157,56,245,188,182,218,33,16,255,243,210,205,12,19,236,95,151,68,23,196,167,126,61,100,93,25,115,96,129,79,220,34,42,144,136,70,238,184,20,222,94,11,219,224,50,58,10,73,6,36,92,194,211,172,98,145,149,228,121,231,200,55,109,141,213,78,169,108,86,244,234,101,122,174,8,186,120,37,46,28,166,180,198,232,221,116,31,75,189,139,138,112,62,181,102,72,3,246,14,97,53,87,185,134,193,29,158,225,248,152,17,105,217,142,148,155,30,135,233,206,85,40,223,140,161,137,13,191,230,66,104,65,153,45,15,176,84,187,22];
   var RCON=[1,2,4,8,16,32,64,128,27,54];
 
@@ -145,7 +159,6 @@
     return W;
   }
 
-  // Precompute multiplication tables for MixColumns
   var MUL2=new Uint8Array(256),MUL3=new Uint8Array(256),MUL9=new Uint8Array(256),MUL11=new Uint8Array(256),MUL13=new Uint8Array(256),MUL14=new Uint8Array(256);
   (function(){
     function xtime(a){return((a<<1)^((a&0x80)?0x1b:0))&0xff}
@@ -153,29 +166,23 @@
     for(var i=0;i<256;i++){MUL2[i]=xtime(i);MUL3[i]=xtime(i)^i;MUL9[i]=mul(i,9);MUL11[i]=mul(i,11);MUL13[i]=mul(i,13);MUL14[i]=mul(i,14)}
   })();
 
-  // Inverse SBOX
   var ISBOX=new Uint8Array(256);for(var i=0;i<256;i++)ISBOX[SBOX[i]]=i;
 
   function aesEncryptBlock(block,W){
     var s=new Uint8Array(16);s.set(block);
     var Nr=W.length/4-1;
-    // AddRoundKey
     for(var i=0;i<4;i++){var w=W[i];s[i*4]^=(w>>>24)&0xff;s[i*4+1]^=(w>>>16)&0xff;s[i*4+2]^=(w>>>8)&0xff;s[i*4+3]^=w&0xff}
     for(var r=1;r<=Nr;r++){
-      // SubBytes
       for(var i=0;i<16;i++)s[i]=SBOX[s[i]];
-      // ShiftRows
       var t=s[1];s[1]=s[5];s[5]=s[9];s[9]=s[13];s[13]=t;
       t=s[2];s[2]=s[10];s[10]=t;t=s[6];s[6]=s[14];s[14]=t;
       t=s[15];s[15]=s[11];s[11]=s[7];s[7]=s[3];s[3]=t;
-      // MixColumns (skip last round)
       if(r<Nr){
         for(var c=0;c<4;c++){
           var i=c*4,a=s[i],b=s[i+1],cc=s[i+2],d=s[i+3];
           s[i]=MUL2[a]^MUL3[b]^cc^d;s[i+1]=a^MUL2[b]^MUL3[cc]^d;s[i+2]=a^b^MUL2[cc]^MUL3[d];s[i+3]=MUL3[a]^b^cc^MUL2[d];
         }
       }
-      // AddRoundKey
       for(var i=0;i<4;i++){var w=W[r*4+i];s[i*4]^=(w>>>24)&0xff;s[i*4+1]^=(w>>>16)&0xff;s[i*4+2]^=(w>>>8)&0xff;s[i*4+3]^=w&0xff}
     }
     return s;
@@ -186,15 +193,11 @@
     var Nr=W.length/4-1;
     for(var i=0;i<4;i++){var w=W[Nr*4+i];s[i*4]^=(w>>>24)&0xff;s[i*4+1]^=(w>>>16)&0xff;s[i*4+2]^=(w>>>8)&0xff;s[i*4+3]^=w&0xff}
     for(var r=Nr-1;r>=0;r--){
-      // InvShiftRows
       var t=s[13];s[13]=s[9];s[9]=s[5];s[5]=s[1];s[1]=t;
       t=s[10];s[10]=s[2];s[2]=t;t=s[14];s[14]=s[6];s[6]=t;
       t=s[3];s[3]=s[7];s[7]=s[11];s[11]=s[15];s[15]=t;
-      // InvSubBytes
       for(var i=0;i<16;i++)s[i]=ISBOX[s[i]];
-      // AddRoundKey
       for(var i=0;i<4;i++){var w=W[r*4+i];s[i*4]^=(w>>>24)&0xff;s[i*4+1]^=(w>>>16)&0xff;s[i*4+2]^=(w>>>8)&0xff;s[i*4+3]^=w&0xff}
-      // InvMixColumns (skip round 0)
       if(r>0){
         for(var c=0;c<4;c++){
           var i=c*4,a=s[i],b=s[i+1],cc=s[i+2],d=s[i+3];
@@ -209,43 +212,27 @@
   function pkcs7Unpad(data){var n=data[data.length-1];if(n<1||n>16)throw new Error("bad padding");return data.slice(0,data.length-n)}
 
   function aesCbcEncrypt(plainBytes,keyBytes,ivBytes){
-    var padded=pkcs7Pad(plainBytes);
-    var W=keyExpansion(keyBytes);
-    var out=new Uint8Array(padded.length);
-    var prev=new Uint8Array(ivBytes);
+    var padded=pkcs7Pad(plainBytes);var W=keyExpansion(keyBytes);
+    var out=new Uint8Array(padded.length);var prev=new Uint8Array(ivBytes);
     for(var off=0;off<padded.length;off+=16){
-      var block=new Uint8Array(16);
-      for(var i=0;i<16;i++)block[i]=padded[off+i]^prev[i];
-      var enc=aesEncryptBlock(block,W);
-      out.set(enc,off);prev=enc;
+      var block=new Uint8Array(16);for(var i=0;i<16;i++)block[i]=padded[off+i]^prev[i];
+      var enc=aesEncryptBlock(block,W);out.set(enc,off);prev=enc;
     }
     return out;
   }
 
   function aesCbcDecrypt(cipherBytes,keyBytes,ivBytes){
-    var W=keyExpansion(keyBytes);
-    var out=new Uint8Array(cipherBytes.length);
-    var prev=new Uint8Array(ivBytes);
+    var W=keyExpansion(keyBytes);var out=new Uint8Array(cipherBytes.length);var prev=new Uint8Array(ivBytes);
     for(var off=0;off<cipherBytes.length;off+=16){
-      var block=cipherBytes.slice(off,off+16);
-      var dec=aesDecryptBlock(block,W);
-      for(var i=0;i<16;i++)out[off+i]=dec[i]^prev[i];
-      prev=block;
+      var block=cipherBytes.slice(off,off+16);var dec=aesDecryptBlock(block,W);
+      for(var i=0;i<16;i++)out[off+i]=dec[i]^prev[i];prev=block;
     }
     return pkcs7Unpad(out);
   }
 
-  function b64Encode(bytes){
-    var bin='';for(var i=0;i<bytes.length;i++)bin+=String.fromCharCode(bytes[i]);
-    return btoa(bin);
-  }
-  function b64Decode(str){
-    var bin=atob(str);var out=new Uint8Array(bin.length);
-    for(var i=0;i<bin.length;i++)out[i]=bin.charCodeAt(i);
-    return out;
-  }
+  function b64Encode(bytes){var bin='';for(var i=0;i<bytes.length;i++)bin+=String.fromCharCode(bytes[i]);return btoa(bin)}
+  function b64Decode(str){var bin=atob(str);var out=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)out[i]=bin.charCodeAt(i);return out}
 
-  // CryptoJS-compatible encrypt: "Salted__" + salt + ciphertext -> base64
   function cjsEncrypt(plaintext, password) {
     var salt = crypto.getRandomValues(new Uint8Array(8));
     var kdf = evpKDF(password, salt);
@@ -256,21 +243,14 @@
     return b64Encode(all);
   }
 
-  // CryptoJS-compatible decrypt
   function cjsDecrypt(b64, password) {
-    var raw = b64Decode(b64);
-    var salt = raw.slice(8, 16);
-    var ct = raw.slice(16);
-    var kdf = evpKDF(password, salt);
-    var dec = aesCbcDecrypt(ct, kdf.key, kdf.iv);
+    var raw = b64Decode(b64);var salt = raw.slice(8, 16);var ct = raw.slice(16);
+    var kdf = evpKDF(password, salt);var dec = aesCbcDecrypt(ct, kdf.key, kdf.iv);
     return new TextDecoder().decode(dec);
   }
 
-  // ============================================================
-  // Buddha encoding logic
-  // ============================================================
   var DEFAULT_KEY = "takuron.top";
-  var PREFIX = "\u4f5b\u53c8\u66f0\uff1a"; // 佛又曰：
+  var PREFIX = "\u4f5b\u53c8\u66f0\uff1a";
 
   var MAP = [
     ["e","\u554e"],["E","\u7faf"],["t","\u5a46"],["T","\u63d0"],["a","\u6469"],["A","\u57f5"],
@@ -288,35 +268,28 @@
   ];
 
   function toGod(msg, key) {
-    var str = cjsEncrypt(msg, key);
-    str = str.substring(10); // Remove "U2FsdGVkX1"
-    for (var i = 0; i < MAP.length; i++) {
-      str = str.split(MAP[i][0]).join(MAP[i][1]);
-    }
+    var str = cjsEncrypt(msg, key);str = str.substring(10);
+    for (var i = 0; i < MAP.length; i++) str = str.split(MAP[i][0]).join(MAP[i][1]);
     return PREFIX + str;
   }
 
   function toMan(msg, key) {
     var str = msg.substring(PREFIX.length);
-    for (var i = 0; i < MAP.length; i++) {
-      str = str.split(MAP[i][1]).join(MAP[i][0]);
-    }
+    for (var i = 0; i < MAP.length; i++) str = str.split(MAP[i][1]).join(MAP[i][0]);
     return cjsDecrypt("U2FsdGVkX1" + str, key);
   }
 
-  // ============================================================
   // UI logic
-  // ============================================================
   function showAlert(type, msg) {
-    document.getElementById("alertError").style.display = "none";
-    document.getElementById("alertSuccess").style.display = "none";
+    document.getElementById("alertError").classList.add("hidden");
+    document.getElementById("alertSuccess").classList.add("hidden");
     var el = document.getElementById(type === "error" ? "alertError" : "alertSuccess");
     el.textContent = msg;
-    el.style.display = "block";
+    el.classList.remove("hidden");
   }
   function hideAlerts() {
-    document.getElementById("alertError").style.display = "none";
-    document.getElementById("alertSuccess").style.display = "none";
+    document.getElementById("alertError").classList.add("hidden");
+    document.getElementById("alertSuccess").classList.add("hidden");
   }
 
   document.getElementById("btnEncrypt").addEventListener("click", function() {
@@ -324,11 +297,8 @@
     var msg = document.getElementById("inputText").value;
     var key = document.getElementById("inputKey").value || DEFAULT_KEY;
     if (!msg) { showAlert("error", "\u65e0\u8a00\u8005\uff0c\u7eb5\u771f\u795e\u518d\u4e34\uff0c\u4ea6\u4e0d\u53ef\u6e21\u3002\uff08\u8bf7\u8f93\u5165\u5f85\u52a0\u5bc6\u7684\u660e\u6587\uff09"); return; }
-    try {
-      document.getElementById("outputText").value = toGod(msg, key);
-    } catch(e) {
-      showAlert("error", "\u52a0\u5bc6\u5931\u8d25: " + e.message);
-    }
+    try { document.getElementById("outputText").value = toGod(msg, key); }
+    catch(e) { showAlert("error", "\u52a0\u5bc6\u5931\u8d25: " + e.message); }
   });
 
   document.getElementById("btnDecrypt").addEventListener("click", function() {
@@ -363,13 +333,15 @@
   });
 
   document.getElementById("btnHelp").addEventListener("click", function() {
-    document.getElementById("helpModal").classList.add("show");
+    var m = document.getElementById("helpModal");
+    m.classList.remove("hidden"); m.classList.add("flex");
   });
   document.getElementById("btnCloseHelp").addEventListener("click", function() {
-    document.getElementById("helpModal").classList.remove("show");
+    var m = document.getElementById("helpModal");
+    m.classList.add("hidden"); m.classList.remove("flex");
   });
   document.getElementById("helpModal").addEventListener("click", function(e) {
-    if (e.target === this) this.classList.remove("show");
+    if (e.target === this) { this.classList.add("hidden"); this.classList.remove("flex"); }
   });
 })();
 </script>
