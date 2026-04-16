@@ -4,28 +4,25 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HTML工具集</title>
-<style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f5f5f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-.container { text-align: center; }
-h1 { color: #333; margin-bottom: 24px; }
-.links { display: flex; flex-direction: column; gap: 12px; margin: 12px;}
-.links a { padding: 12px 32px; background: #4a90d9; color: #fff; text-decoration: none; border-radius: 6px; font-size: 14px; transition: background 0.2s; }
-.links a:hover { background: #357abd; }
-</style>
+<script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-<div class="container">
-  <h1>HTML 工具集</h1>
-  <div class="links">
-    <a href="/json-formatter.html">JSON 格式化工具</a>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+  <div class="text-center w-full max-w-md">
+    <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-8">HTML 工具集</h1>
+    <div class="flex flex-col gap-3">
+      <a href="/json-formatter.html"
+         class="block px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm md:text-base transition-colors">
+        JSON 格式化工具
+      </a>
+      <a href="/seq-diagram.html"
+         class="block px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm md:text-base transition-colors">
+        时序图工具
+      </a>
+      <a href="/talk_with_buddha.html"
+         class="block px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm md:text-base transition-colors">
+        与佛论禅
+      </a>
+    </div>
   </div>
-  <div class="links">
-    <a href="/seq-diagram.html">时序图工具</a>
-  </div>
-  <div class="links">
-    <a href="/talk_with_buddha.html">与佛论禅</a>
-  </div>
-</div>
 </body>
 </html>
